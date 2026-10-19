@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Ngày 20/10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            color: #fff;
+        }
+
+        /* Hiệu ứng vì sao lấp lánh */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Khu vực chứa các lớp chữ chạy */
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            z-index: 2;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        /* Mỗi lớp chữ (cột) */
+        .text-layer {
+            position: relative;
+            width: 9%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .scrolling-content {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            animation: scrollDown var(--speed) linear infinite;
+            animation-delay: var(--delay);
+        }
+
+        .wished-item {
+            padding: 12px 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            color: #ffb6c1;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+            backdrop-filter: blur(2px);
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Tiêu đề trung tâm nổi bật */
+        .center-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 25px 50px;
+            border-radius: 15px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
+            pointer-events: none;
+        }
+
+        .center-title h1 {
+            font-size: 32px;
+            color: #ff69b4;
+            text-shadow: 0 0 10px #ff1493;
+            margin-bottom: 10px;
+        }
+
+        .center-title p {
+            font-size: 16px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nền sao -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Tiêu đề giữa màn hình -->
+    <div class="center-title">
+        <h1>CHÚC MỪNG 20/10</h1>
+        <p>Chúc một nửa thế giới luôn rực rỡ và hạnh phúc!</p>
+    </div>
+
+    <!-- 10 lớp chữ chạy -->
+    <div class="container" id="layersContainer"></div>
+
+    <script>
+        // Danh sách 60 câu chúc 20/10 ý nghĩa
+        const wishes = [
+            "Chúc một nửa thế giới luôn luôn xinh đẹp và rạng rỡ.",
+            "Chúc bạn ngày 20/10 tràn ngập niềm vui và hạnh phúc.",
+            "Chúc các chị em mãi trẻ trung, yêu đời và thành công.",
+            "Chúc một nửa yêu thương luôn ngập tràn hoa và quà.",
+            "Chúc bạn có một ngày 20/10 thật ý nghĩa bên người thân.",
+            "Chúc phái đẹp luôn giữ mãi nụ cười trên môi.",
+            "Chúc bạn ngày càng xinh đẹp, giỏi việc nước đảm việc nhà.",
+            "Chúc một nửa thế giới luôn được yêu thương chiều chuộng.",
+            "Chúc bạn luôn tỏa sáng như những vì sao trên bầu trời.",
+            "Chúc ngày 20/10 mang lại cho bạn nhiều may mắn.",
+            "Chúc các bà, các mẹ, các chị em một đời bình an, hạnh phúc.",
+            "Chúc bạn luôn tràn đầy năng lượng và nhiệt huyết.",
+            "Chúc một nửa thế giới đạt được mọi ước mơ của mình.",
+            "Chúc bạn luôn là bông hoa tươi thắm nhất trong vườn hoa đời.",
+            "Chúc ngày 20/10 ngập tràn những điều ngọt ngào nhất.",
+            "Chúc bạn luôn có những phút giây thư giãn tuyệt vời.",
+            "Chúc phái đẹp luôn tự tin, bản lĩnh và kiêu hãnh.",
+            "Chúc bạn nhận được thật nhiều món quà bất ngờ hôm nay.",
+            "Chúc bạn luôn tìm thấy niềm vui trong cuộc sống mỗi ngày.",
+            "Chúc một nửa thế giới luôn được đối xử dịu dàng nhất.",
+            "Chúc bạn có một ngày lễ 20/10 thật đáng nhớ.",
+            "Chúc các chị em luôn giữ được trái tim ấm áp, nhân hậu.",
+            "Chúc bạn ngày càng thành công hơn trên con đường sự nghiệp.",
+            "Chúc bạn luôn gặp được những điều tốt đẹp nhất.",
+            "Chúc bạn mãi là niềm tự hào của gia đình và người thương.",
+            "Chúc một nửa thế giới luôn tràn ngập tiếng cười.",
+            "Chúc bạn luôn khỏe mạnh, tươi vui và yêu đời.",
+            "Chúc ngày 20/10 khởi đầu cho một tuần mới thật suôn sẻ.",
+            "Chúc bạn luôn được che chở và yêu thương vô điều kiện.",
+            "Chúc phái đẹp luôn giữ được khí chất thanh lịch, sang trọng.",
+            "Chúc bạn luôn có bờ vai vững chắc để nương tựa.",
+            "Chúc bạn thỏa sức bay cao, bay xa với những hoài bão.",
+            "Chúc bạn luôn giữ được sự lạc quan trong mọi hoàn cảnh.",
+            "Chúc một nửa thế giới luôn được cưng chiều như công chúa.",
+            "Chúc bạn có một tương lai thật rực rỡ và tươi sáng.",
+            "Chúc bạn luôn nhận được sự trân trọng từ những người xung quanh.",
+            "Chúc ngày 20/10 là ngày tuyệt vời nhất trong năm của bạn.",
+            "Chúc bạn luôn biết cách làm chủ cuộc sống của chính mình.",
+            "Chúc bạn mãi giữ được nét duyên ngầm khó phai.",
+            "Chúc bạn luôn hạnh phúc bên người bạn đời và gia đình.",
+            "Chúc phái đẹp luôn là nguồn cảm hứng bất tận trong cuộc sống.",
+            "Chúc bạn luôn xinh tươi dù ở bất cứ độ tuổi nào.",
+            "Chúc bạn có một buổi tối 20/10 thật lãng mạn.",
+            "Chúc bạn luôn đủ bản lĩnh để vượt qua mọi thử thách.",
+            "Chúc bạn mỗi ngày thức dậy đều là một ngày vui.",
+            "Chúc một nửa thế giới luôn ngập tràn sắc hồng hạnh phúc.",
+            "Chúc bạn luôn giữ được sự hồn nhiên, tươi trẻ.",
+            "Chúc bạn gặt hái được nhiều thành tựu lớn lao.",
+            "Chúc bạn luôn được vây quanh bởi những người chân thành.",
+            "Chúc ngày 20/10 đem lại may mắn tài lộc cho bạn.",
+            "Chúc bạn luôn là tâm điểm của sự chú ý và ngưỡng mộ.",
+            "Chúc bạn có một làn da đẹp và vóc dáng vạn người mê.",
+            "Chúc bạn luôn tràn đầy cảm hứng sáng tạo trong công việc.",
+            "Chúc bạn luôn biết yêu thương và chăm sóc bản thân nhiều hơn.",
+            "Chúc bạn một đời an yên, không lo âu phiền muộn.",
+            "Chúc bạn luôn nhận được những lời chúc tốt đẹp nhất.",
+            "Chúc phái đẹp luôn kiêu sa và tỏa sáng rực rỡ.",
+            "Chúc bạn có một ngày lễ trọn vẹn từng phút giây.",
+            "Chúc bạn luôn giữ vững ngọn lửa đam mê trong tim.",
+            "Chúc mừng ngày 20/10 - Chúc bạn tất cả sự tuyệt vời trên đời!"
+        ];
+
+        // Tạo hiệu ứng 100 vì sao lấp lánh
+        const starsContainer = document.getElementById('starsContainer');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 3 + 1.5}s`);
+            star.style.animationDelay = `${Math.random() * 3}s`;
+            starsContainer.appendChild(star);
+        }
+
+        // Chia 60 câu thành 10 lớp (mỗi lớp 6 câu)
+        const layersContainer = document.getElementById('layersContainer');
+        const totalLayers = 10;
+        const itemsPerLayer = wishes.length / totalLayers;
+
+        for (let i = 0; i < totalLayers; i++) {
+            const layer = document.createElement('div');
+            layer.className = 'text-layer';
+
+            const content = document.createElement('div');
+            content.className = 'scrolling-content';
+            
+            // Tốc độ chạy ngẫu nhiên cho mỗi lớp tạo cảm giác sinh động (từ 12s đến 22s)
+            const speed = Math.random() * 10 + 12;
+            const delay = Math.random() * -15; // Tạo độ lệch thời gian bắt đầu
+            content.style.setProperty('--speed', `${speed}s`);
+            content.style.setProperty('--delay', `${delay}s`);
+
+            // Lấy 6 câu cho lớp này (lặp lại mảng nếu cần để danh sách mượt mà)
+            const sliceWishes = wishes.slice(i * itemsPerLayer, (i + 1) * itemsPerLayer);
+            
+            // Nhân đôi nội dung bên trong lớp để khi chạy hết vòng không bị khoảng trống
+            const displayWishes = [...sliceWishes, ...sliceWishes];
+
+            displayWishes.forEach(text => {
+                const item = document.createElement('div');
+                item.className = 'wished-item';
+                item.innerText = text;
+                content.appendChild(item);
+            });
+
+            layer.appendChild(content);
+            layersContainer.appendChild(layer);
+        }
+    </script>
+</body>
+</html>
